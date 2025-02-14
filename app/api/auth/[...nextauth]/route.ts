@@ -1,10 +1,9 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import { eq, or } from "drizzle-orm";
 import { users, authentidatas } from "@/db/schema";
-const crypto = require("crypto");
+import crypto from "crypto";
 
 declare module "next-auth" {
   interface User {
@@ -12,6 +11,7 @@ declare module "next-auth" {
     email: string;
     name: string;
     phone: string;
+    remember: boolean;
   }
   interface Session {
     user: {
@@ -28,19 +28,22 @@ const  hashPassword = (password: string):string => {
     return crypto.createHash('sha256').update(password).digest('base64');
 }
 
+let remember:boolean = false;
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         identifier: { label: "Email or Phone", type: "text" },
+        remember: { label: "Remember me", type: "checkbox", defaultValue: false },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.identifier || !credentials?.password) {
           throw new Error("Please enter your email/phone and password");
         }
-
+        console.log("Remember : "+credentials.remember)
         // Fetch user by email or phone
         const user = await db
           .select()
@@ -72,27 +75,33 @@ const handler = NextAuth({
             throw new Error("Invalid password");
         }
 
+        remember = credentials.remember === "true";
+
         return {
           id: user[0].Id,
           email: user[0].Email,
           name: user[0].Name,
           phone: user[0].Phone,
+          remember: remember,
         };
       },
     }),
   ],
   pages: {
-    error : "/auth"
+    error : "/auth",
+    signOut: "/auth",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: remember ? 90 * 24 * 60 * 60 : 24 * 60 * 60 // 90 days or 1 day
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.phone = user.phone;
+        token.email = user.email;
+        token.remember = user.remember;
       }
       return token;
     },

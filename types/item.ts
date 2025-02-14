@@ -1,43 +1,56 @@
-export interface feature{
-    Id : string;
-    Attribute : string;
-    Value : string;
+export interface Feature {
+    id: string;
+    productId: string;
+    attribute: string;
+    value: string;
 }
 
-export interface review{
-    Id : string;
-    ProductId : string;
-    Rating : number;
-    date : string;
-    ReviewerId : string;
-    Media : Media[];
-    Upvotes : number;
-    Downvotes : number;
+export interface Review {
+    id: string;
+    productId: string;
+    reviewerId: string;
+    description: string;
+    rating: number;
+    date: string;
+    media: Media[];  // Fixed lowercase 'm'
 }
 
-enum MediaType {
+export enum MediaType {
     Photo = "Photo",
     Video = "Video"
 }
 
-
-export interface Media{
-    Id : string;
-    Type : MediaType,
-    Link : string
+export enum MediaFor {
+    Product = "Product",
+    Review = "Review"
 }
 
-export interface Product{
-    Id : string;
-    Title : string;
-    Rating : number;
-    Quatity : number;
-    ActualPrice : number;
-    Price : number;
-    Discount : number;
-    Description : string;
+export interface Media {
+    id: string;
+    referenceId: string; // Fixed spelling
+    type: MediaType;
+    mediaFor: MediaFor;
+    link: string;
+}
 
-    Media : Media[];
-    Features : feature[];
-    Reviews : review[];
+export interface Category {
+    id: string;
+    name: string;
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    rating: number;
+    imageLink: string;
+    actualPrice: number;
+    price: number;
+    discount: number;
+    description: string;
+    stock: number;
+    isAvailable: boolean;
+    media: Media[];
+    features: Feature[];  // Capitalized 'Feature'
+    reviews: Review[];  // Capitalized 'Review'
+    categories: Category[];
 }

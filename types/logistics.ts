@@ -4,7 +4,7 @@ import { Address } from "./personal";
 
 
 
-enum ItemStatus{
+export enum ItemStatus{
     Default = "Default",
     Deleted = "Deleted",
     SaveForLater = "SaveForLater"
@@ -20,7 +20,7 @@ export interface Cart{
     CartItems : CartItem[];
 }
 
-enum OrderStatus{
+export enum OrderStatus{
     Delivered = "Delivered",
     Shipped = "Shipped",
     Returned = "Returned",
