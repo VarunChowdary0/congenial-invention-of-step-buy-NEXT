@@ -10,9 +10,10 @@ const SessionProvider = ({ children }: { children: React.ReactNode }) => {
     <Provider>
       <div className="min-h-screen flex flex-col ">
         <NavBar />
-        <div className=" h-10 w-full bg-slate-900">
-
-        </div>
+        {/* {
+          window.location.pathname.includes("admin") ? null : 
+            <div className=" h-10 w-full bg-slate-900"></div>
+        } */}
         <main className="flex-1">
           {children}
         </main>

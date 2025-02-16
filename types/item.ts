@@ -1,3 +1,5 @@
+import { DateTime } from "next-auth/providers/kakao";
+
 export interface Feature {
     id: string;
     productId: string;
@@ -16,8 +18,8 @@ export interface Review {
 }
 
 export enum MediaType {
-    Photo = "Photo",
-    Video = "Video"
+    Video = 1,
+    Photo = 0
 }
 
 export enum MediaFor {
@@ -48,6 +50,8 @@ export interface Product {
     discount: number;
     description: string;
     stock: number;
+    dateCreated : string;
+    lowStockAlertThreshold:number;
     isAvailable: boolean;
     media: Media[];
     features: Feature[];  // Capitalized 'Feature'

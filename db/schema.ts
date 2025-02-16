@@ -1,5 +1,4 @@
 import { mysqlTable, varchar, datetime, int } from 'drizzle-orm/mysql-core';
-import { sql } from 'drizzle-orm';
 
 export const users = mysqlTable('users', {
   Id: varchar('id', { length: 255 }).primaryKey(),

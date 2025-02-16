@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
+import { server_url } from './Constant';
 
 
 interface RegisterProp {
@@ -169,7 +170,7 @@ const RegisterPage:React.FC<RegisterProp> = (props) => {
       } else {
         console.log('Form submitted:', formData);
         if(Ok){
-            axios.post('http://localhost:5283/api/register',{
+            axios.post(server_url+'/api/register',{
                 Name: formData.name,
                 Email:formData.email,
                 Phone:formData.phone,

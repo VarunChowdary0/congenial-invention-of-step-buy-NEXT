@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react'
 import SignOutButton from '../SignOutButton'
 import { useSession } from 'next-auth/react';
@@ -8,7 +10,7 @@ const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-[#212189] shadow-sm sticky px-0 flex
+    <nav className="bg-indigo-800 shadow-sm sticky px-0 flex
      text-white items-center justify-center top-0 z-[1000] border-b">
       <div className="w-full bg-black/ px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 items-center">
