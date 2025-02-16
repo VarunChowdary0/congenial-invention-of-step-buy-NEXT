@@ -13,11 +13,11 @@ const MiniProduct: React.FC<Product> = ({
     actualPrice,
     price,
     discount,
-    description,
+    // description,
     stock,
     features,
     reviews,
-    categories
+    // categories
 }) => {
   return (
     <motion.div

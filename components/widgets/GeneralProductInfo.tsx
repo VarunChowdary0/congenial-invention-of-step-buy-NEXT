@@ -45,6 +45,7 @@ const GeneralProductInfo: React.FC<GeneralProductInfoProps> = ({ ProductData,Sto
     const [discount_, setDiscount] = useState<number>(ProductData?.discount || 0);
     const [errors, setErrors] = useState<Partial<Record<keyof ProductData, string>>>({});
 
+    console.log(setErrors);
     // --
 
     const [stock,setStock] = useState<number>(StockData.stock || 0);

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { MediaType, Product } from '@/types/item'
+import { Product } from '@/types/item'
 import MiniProduct from '@/components/widgets/MiniProduct';
 import Filters from '@/components/widgets/Filters';
 import axios from 'axios';

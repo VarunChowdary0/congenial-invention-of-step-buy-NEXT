@@ -1,7 +1,7 @@
  'use client'
 
-import React, { useState, useEffect, JSX } from 'react'
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Product, Feature, Media, MediaType, MediaFor } from '@/types/item'
 import { ScanQrCode, UploadIcon, Save, Maximize } from 'lucide-react'
@@ -27,7 +27,6 @@ const EditProductPage = () => {
   const edit_media_id = searchParams.get('edit_media_id')
   const edit_tumbnail = searchParams.get('edit_tumbnail')
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
   const [existingMedia, setExistingMedia] = useState<Media[]>(
      []
 );
@@ -559,7 +558,7 @@ const EditProductPage = () => {
                         <CategoryManagement
                           categories={ProductData?.categories || []}
                           pid={String(params)}
-                          setCategoriesData={(categories) => {}}
+                          setCategoriesData={() => {}}
                         />
                     </Collapse>
                   </div>

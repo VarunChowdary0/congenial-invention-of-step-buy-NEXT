@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AlertTriangle } from 'lucide-react'
 import ExtreLabledInputNumber from '../mini/ExtreLabledInputNumber'
 import { FaProductHunt } from 'react-icons/fa'
@@ -100,7 +100,7 @@ const StockManagement: React.FC<StockManagementProps> = ({ StockData }) => {
                     <div>
                         <p className="text-sm text-red-700 font-medium">Out of Stock</p>
                         <p className="text-sm text-red-600">
-                            This product is currently out of stock and won't be visible to customers
+                            This product is currently out of stock and {"won't"} be visible to customers
                         </p>
                     </div>
                 </div>

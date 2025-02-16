@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { JSX } from 'react'
 
 interface curr{
     value: number;
     placeholder: string;
-    lable : any;
+    lable : JSX.Element;
     id : string;
     diasbled? : boolean;
-    setter? : React.Dispatch<React.SetStateAction<number>> | ((e: any) => void);
+    setter? : React.Dispatch<React.SetStateAction<number>> ;
 }
 const ExtreLabledInputNumber:React.FC<curr> = (props) => {
   return (

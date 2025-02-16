@@ -4,7 +4,6 @@ import axios from 'axios'
 import ContainerLoader from '../mini/ContainerLoader'
 import { server_url } from '../Constant'
 import { Category } from '@/types/item'
-import { div } from 'framer-motion/client'
 
 interface CategoryData {
     categories: Category[]

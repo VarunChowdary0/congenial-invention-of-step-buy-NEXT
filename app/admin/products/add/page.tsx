@@ -1,28 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import axios from 'axios'
-import { Category, Feature } from '@/types/item'
 import PageHeader from '@/components/widgets/PageHeader'
 import { Save, ScanQrCode } from 'lucide-react'
 import ContainerLoader from '@/components/mini/ContainerLoader'
 import { server_url } from '@/components/Constant'
 
-interface ProductFormData {
-  name: string
-  description: string
-  price: number
-  actualPrice: number
-  stock: number
-  categoryIds: string[]
-  features: Omit<Feature, 'id' | 'productId'>[]
-  mainImage: File | null
-  additionalImages: File[]
-}
 
 const AddProductPage: React.FC = () => {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState<string>("")
   const [error,setErr] = useState<string>();

@@ -90,7 +90,7 @@ const FeatureManagement: React.FC<FeatureData> = ({ features ,pid }) => {
                     <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                     <p className="text-gray-500">No features added yet</p>
                     <p className="text-sm text-gray-400">
-                        Click "Add Feature" to start adding product features
+                        Click &qout;Add Feature&qout; to start adding product features
                     </p>
                 </div>
             ) : (
