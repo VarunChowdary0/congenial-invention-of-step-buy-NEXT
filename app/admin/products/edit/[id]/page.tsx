@@ -15,6 +15,7 @@ import GeneralProductInfo from '@/components/widgets/GeneralProductInfo'
 import FeatureManagement from '@/components/widgets/FeatureManagement'
 import ContainerLoader from '@/components/mini/ContainerLoader'
 import { server_url } from '@/components/Constant'
+import CategoryManagement from '@/components/widgets/CategoryManagement'
 
 const EditProductPage = () => {
 
@@ -555,9 +556,11 @@ const EditProductPage = () => {
                   </div>
                   <div className=' bg-white  rounded-md shadow-sm relative'>
                     <Collapse title='Manage Product Categories'>
-                               <div className=' h-[200px] flex items-center justify-center'>
-                                  <p>Work pending</p>
-                               </div>
+                        <CategoryManagement
+                          categories={ProductData?.categories || []}
+                          pid={String(params)}
+                          setCategoriesData={(categories) => {}}
+                        />
                     </Collapse>
                   </div>
                 </div>
