@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Plus, AlertTriangle, X } from 'lucide-react'
 import axios from 'axios'
-import ContainerLoader from '../mini/ContainerLoader'
-import { server_url } from '../Constant'
 import { Category } from '@/types/item'
+import { server_url } from '@/components/Constant'
+import ContainerLoader from '@/components/mini/ContainerLoader'
 
 interface CategoryData {
     categories: Category[]

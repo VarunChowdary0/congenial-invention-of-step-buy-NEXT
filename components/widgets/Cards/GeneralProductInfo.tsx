@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import ExtreLabledInputNumber from '../mini/ExtreLabledInputNumber';
+import ExtreLabledInputNumber from '../../mini/ExtreLabledInputNumber';
 import axios from 'axios';
 import { Minimize, Percent } from 'lucide-react';
 import StockManagement from './StockManagement';
 import { FaRupeeSign } from 'react-icons/fa';
-import Collapse from '../popups/Collpse';
-import PopUp from '../popups/PopUp';
+import Collapse from '../../popups/Collpse';
+import PopUp from '../../popups/PopUp';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ContainerLoader from '../mini/ContainerLoader';
-import { server_url } from '../Constant';
+import ContainerLoader from '../../mini/ContainerLoader';
+import { server_url } from '../../Constant';
 
 interface ProductData {
     id : string;
@@ -123,7 +123,7 @@ const GeneralProductInfo: React.FC<GeneralProductInfoProps> = ({ ProductData,Sto
     }
 
     const content =  (
-        <div className="p-4 space-y-6 py-10 rounded-lg shadow-sm">
+        <div className=" space-y-6 p-10 rounded-lg shadow-sm">
         {/* Product Name */}
         <div className="space-y-2">
             <label htmlFor="productname" className="block text-sm font-medium text-gray-700">
@@ -296,7 +296,7 @@ const GeneralProductInfo: React.FC<GeneralProductInfoProps> = ({ ProductData,Sto
             {
                 fullScreen ?
                 <PopUp loading={loading}>
-                <div className=' flex justify-between  pr-10 items-center
+                <div className=' p-5 rounded-lg flex justify-between  pr-10 items-center
                  text-lg font-semibold sticky top-0 w-full 
                 bg-white z-[1000] pb-4 shadow'>
                     <p>General Product Info</p>

@@ -4,18 +4,19 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Product, Feature, Media, MediaType, MediaFor } from '@/types/item'
-import { ScanQrCode, UploadIcon, Save, Maximize } from 'lucide-react'
+import { ScanQrCode, UploadIcon, Save, Maximize, AlertCircle } from 'lucide-react'
 import axios from 'axios'
 import AddMedia from '@/components/popups/PopUp'
 import PageHeader from '@/components/widgets/PageHeader'
 import Collapse from '@/components/popups/Collpse'
 import VideoComponent from '@/components/VideoComponent'
 // import ExtreLabledInputNumber from '@/components/mini/ExtreLabledInputNumber'
-import GeneralProductInfo from '@/components/widgets/GeneralProductInfo'
-import FeatureManagement from '@/components/widgets/FeatureManagement'
+import GeneralProductInfo from '@/components/widgets/Cards/GeneralProductInfo'
 import ContainerLoader from '@/components/mini/ContainerLoader'
 import { server_url } from '@/components/Constant'
-import CategoryManagement from '@/components/widgets/CategoryManagement'
+import { a } from 'framer-motion/client'
+import CategoryManagement from '@/components/widgets/Cards/CategoryManagement'
+import FeatureManagement from '@/components/widgets/Cards/FeatureManagement'
 
 const EditProductPage = () => {
 
@@ -136,6 +137,7 @@ const EditProductPage = () => {
         console.log(res.data);
         const newMedia = res.data;
         setProductData(newMedia);
+        setTempMedia(prev => ({...prev, link: ""}))
       })
       .catch((err) => {
         console.log(err.response);
@@ -191,7 +193,7 @@ const EditProductPage = () => {
             {
               edit_tumbnail &&
               <AddMedia loading={loading}>
-                 <div className=' flex flex-col gap-2'>
+                 <div className=' p-5 rounded-lg bg-white flex flex-col gap-2'>
                 <div className=' text-lg font-semibold text-[#1f3e2b]'>
                   Edit Product Tumbnail
                 </div>
@@ -253,7 +255,7 @@ const EditProductPage = () => {
             {
               add_media && 
               <AddMedia loading={loading}>
-              <div className=' flex flex-col min-w-[300px] gap-2'>
+              <div className=' p-5 rounded-lg bg-white flex flex-col min-w-[300px] gap-2'>
                 <div className=' text-lg font-semibold text-[#1f3e2b]'>
                   Add Media
                 </div>
@@ -322,7 +324,7 @@ const EditProductPage = () => {
             {
               edit_media &&
               <AddMedia loading={loading}>
-                <div className=' flex min-w-[300px] flex-col gap-2'>
+                <div className=' p-5 rounded-xl flex min-w-[300px] flex-col gap-2'>
                 <div className=' text-lg font-semibold text-[#1f3e2b]'>
                   Edit Media
                 </div>
@@ -394,7 +396,7 @@ const EditProductPage = () => {
                     <div className='bg-white h-fit shadow-sm rounded-md'>
                         <Collapse title='Product Image' defaultOpen>
                         <div className="p-4 rounded-lg shadow-sm">
-                            <div className=' p-3'>
+                            {/* <div className=' p-3'>
                               <div className=' flex flex-col gap-2'>
                                   <label htmlFor="tagger" className=' text-gray-700'>Tag</label>
                                   <input type="text" id='tagger' placeholder='Type and enter'
@@ -402,12 +404,12 @@ const EditProductPage = () => {
                                         focus:border-[1.3px] transition-all focus:border-[#d5d4d4]
                                       tracking-wide w-full border p-2 rounded-md'/>
                               </div>
-                            </div>
+                            </div> */}
 
-                            <div className=' p-3 '>
+                            <div className=' pt-3 pb-1 px-0 '>
                               <div className=' flex flex-col gap-2'>
                                   <label htmlFor="tagger" className=' text-gray-700'>Product Tumbnail Image</label>
-                                  <div className='group w-full relative overflow-hidden h-[300px] bg-slate-100 rounded-lg'>
+                                  <div className='group w-full relative overflow-hidden h-fit bg-slate-100 rounded-lg'>
                                     <Image
                                       src={Tumbnail ||"https://jaimaaroadlines.websites.co.in/dummytemplate/img/product-placeholder.png"}
                                       alt={"name"}
@@ -427,59 +429,64 @@ const EditProductPage = () => {
                                     </div>
                                   </div>
                               </div>
+                              <div className='mb-3 bg-orange-0 p-2 px-0 tracking-wide rounded-md'>
+                                <p className='text-sm flex  gap-3 items-center justify-start text-red-700'>
+                                  <AlertCircle/>
+                                  Pay attention to the quality and size of the pictures you add.
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </Collapse>
                     </div>
                     <div className=' py-1 h-fit bg-white shadow-sm rounded-md'>
                         <Collapse title='Description Media' >
-                        <div className="p-4 space-y-6 py-10 rounded-lg shadow-sm">
-                           <div onClick={()=>{open_popup_add_media();}} 
-                            className=' bg-[#e1f166] flex items-center justify-center shadow-sm p-2 rounded-md 
-                            text-[#294531] border w-fit hover:cursor-pointer hover:shadow-lg transition-all'>
-                              <UploadIcon className='w-8 scale-50 h-8'/>
-                              <p className=' font-semibold'>Add Another Video/Image</p>
-                            </div>
-                          <div className=' p-3'>
+                        <div className="py-4 space-y-6 pb-6 rounded-lg shadow-sm">
+                          <div className=' p-3 pt-0'>
                             <div className=' flex flex-col gap-2'>
                                 <label htmlFor="tagger" className=' text-gray-700'>Product Images</label>
                                   {
                                     existingMedia.map((media,idx)=>
-                                    <div key={idx} className='group w-full relative overflow-hidden h-[300px] bg-slate-100 rounded-lg'>
-                                    {
-                                      media.type === MediaType.Photo ?
-                                        <Image
-                                          src={media.link}
-                                          alt={media.mediaFor}
-                                          width={400}
-                                          height={300}
-                                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                        :
-                                        (media.link.match(/youtube.com/) || media.link.match(/youtu.be/)) ?
-                                        <div className=' w-full flex items-center justify-center'>
-                                            <div dangerouslySetInnerHTML={{__html: media.link}} />
-                                        </div> 
-                                        :
-                                        <div className=' w-full flex items-center justify-center'>
-                                          <VideoComponent media={media}/>
-                                        </div> 
-                                    }
-                                    <div className=' hidden group-hover:flex transition-all absolute right-4
-                                     top-3  row-auto bg- z-50  items-center justify-center gap-4'>
-                                      <div onClick={()=>{
-                                        open_popup_edit_media(media);
-                                      }} className='px-3 p-2 bg-white rounded-md text-green-900
-                                       cursor-pointer hover:bg-green-50'>Replace</div>
-                                      <div onClick={()=>{
-                                        // setExistingMedia(existingMedia.filter((m) => m.id !== media.id));
-                                        Delete_Media(media);
-                                      }} className='px-3 p-2 bg-white rounded-md text-red-900
-                                       cursor-pointer hover:bg-red-50'>Delete</div>
+                                    <Collapse key={idx} underline={false} title={(media.type===MediaType.Video?"Video ":"Image ")+(idx+1)} defaultOpen>
+                                        <div  className='group w-full relative overflow-hidden h-fit bg-slate-100 rounded-lg'>
+                                        {
+                                          media.type === MediaType.Photo ?
+                                          <Image
+                                            src={media.link}
+                                            alt={media.mediaFor}
+                                            width={400}
+                                            height={300}
+                                            className="object-cover w-full h-fit group-hover:scale-105 transition-transform duration-300"
+                                          />
+                                          :
+                                          (media.link.match(/youtube.com/) || media.link.match(/youtu.be/)) ?
+                                            <div className=' min-w-full h-[100%] z-50' dangerouslySetInnerHTML={{__html: media.link}} />
+                                          :
+                                          <div className=' w-full flex h-fit items-center justify-center'>
+                                            <VideoComponent media={media}/>
+                                          </div> 
+                                        }
+                                        <div className=' hidden group-hover:flex transition-all absolute right-4
+                                          top-3  row-auto bg- z-50 items-center justify-center gap-4'>
+                                          <div onClick={()=>{
+                                          open_popup_edit_media(media);
+                                          }} className='px-3 p-2 border shadow-sm bg-white font-semibold rounded-md text-green-900
+                                            cursor-pointer hover:bg-green-50'>Replace</div>
+                                          <div onClick={()=>{
+                                          Delete_Media(media);
+                                          }} className='px-3 border p-2 bg-white shadow-sm font-semibold rounded-md text-red-900
+                                            cursor-pointer hover:bg-red-50'>Delete</div>
+                                        </div>
                                     </div>
-                                    </div>
+                                    </Collapse>
                                     )
                                   }
+                            </div>
+                            <div onClick={()=>{open_popup_add_media();}} 
+                            className=' mt-5 bg-[#e1f166] flex items-center justify-center shadow-sm p-2 rounded-md 
+                            text-[#294531] border w-fit hover:cursor-pointer hover:shadow-lg transition-all'>
+                              <UploadIcon className='w-8 scale-50 h-8'/>
+                              <p className=' font-semibold'>Add Another Video/Image</p>
                             </div>
                           </div>
                         </div>

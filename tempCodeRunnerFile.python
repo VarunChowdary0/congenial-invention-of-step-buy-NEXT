@@ -1,0 +1,2 @@
+for i in range(390):
+    print(f"<div className=' w-[{i}px]'></div>")

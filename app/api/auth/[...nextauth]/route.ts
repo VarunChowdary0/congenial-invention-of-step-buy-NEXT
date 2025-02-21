@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { eq, or } from "drizzle-orm";
 import { users, authentidatas } from "@/db/schema";
 import crypto from "crypto";
+import { UserType } from "@/types/personal";
 
 declare module "next-auth" {
   interface User {
@@ -12,7 +13,9 @@ declare module "next-auth" {
     name: string;
     phone: string;
     remember: boolean;
+    role: UserType;
   }
+
   interface Session {
     user: {
       id: string;
@@ -20,6 +23,7 @@ declare module "next-auth" {
       name?: string | null;
       phone: string;
       image?: string | null;
+      role: UserType;
     }
   }
 }
@@ -52,6 +56,8 @@ const handler = NextAuth({
             or(eq(users.Email, credentials.identifier), eq(users.Phone, credentials.identifier))
           )
           .limit(1);
+        
+        console.log("User : "+JSON.stringify(user[0]))
 
         if (!user[0]) {
           throw new Error("No user found");
@@ -83,6 +89,7 @@ const handler = NextAuth({
           name: user[0].Name,
           phone: user[0].Phone,
           remember: remember,
+          role: user[0].Role ,
         };
       },
     }),
@@ -98,21 +105,23 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.phone = user.phone;
-        token.email = user.email;
-        token.remember = user.remember;
+      token.id = user.id;
+      token.phone = user.phone;
+      token.email = user.email;
+      token.remember = user.remember;
+      token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.phone = token.phone as string;
+      session.user.id = token.id as string;
+      session.user.phone = token.phone as string;
+      session.user.role = token.role as UserType; // Add this line
       }
       return session;
     },
-  },
+  }
 });
 
 export { handler as GET, handler as POST };

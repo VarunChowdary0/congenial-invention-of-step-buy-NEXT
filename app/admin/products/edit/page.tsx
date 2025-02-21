@@ -4,6 +4,7 @@ import PageHeader from '@/components/widgets/PageHeader';
 import { Product } from '@/types/item';
 import axios from 'axios';
 import { Loader2, ArrowUpDown, Pencil } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -100,7 +101,9 @@ const Page = () => {
                                 {products.map((product) => (
                                         <tr key={product.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {product.id}
+                                            <Link href={"/product/"+product.id}>
+                                                {product.id}
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {product.name}
@@ -117,13 +120,12 @@ const Page = () => {
                                             ₹{product.price.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button
-                                                onClick={() => router.push(`/admin/products/edit/${product.id}`)}
+                                            <Link href={`/admin/products/edit/${product.id}`}
                                                 className="text-indigo-600 hover:text-indigo-900 inline-flex items-center gap-1"
                                             >
                                                 <Pencil className="w-4 h-4" />
                                                 Edit
-                                            </button>
+                                            </Link>
                                         </td>
                                          </tr>
                                 ))}

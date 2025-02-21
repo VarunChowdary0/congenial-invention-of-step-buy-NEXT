@@ -7,13 +7,15 @@ interface CollapseProps {
   children: React.ReactNode
   defaultOpen?: boolean
   className?: string
+  underline?: boolean ;
 }
 
 const Collapse: React.FC<CollapseProps> = ({ 
   title, 
   children, 
   defaultOpen = false,
-  className = ''
+  className = '',
+  underline = true
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
@@ -36,7 +38,7 @@ const Collapse: React.FC<CollapseProps> = ({
             </div>
         </motion.div>
       </button>
-{isOpen &&      <hr className=' border border-[#e1e0e0]' />}
+{isOpen && underline  &&   <hr className=' border border-[#e1e0e0]' />}
       <AnimatePresence>
         {isOpen && (
           <motion.div

@@ -1,6 +1,6 @@
 import React from 'react'
 import { AlertTriangle } from 'lucide-react'
-import ExtreLabledInputNumber from '../mini/ExtreLabledInputNumber'
+import ExtreLabledInputNumber from '@/components/mini/ExtreLabledInputNumber'
 import { FaProductHunt } from 'react-icons/fa'
 
 interface StockData {

@@ -21,3 +21,10 @@ export interface Address{
     Phone : string;
     Name : string;
 }
+
+export enum UserType{
+    Admin = "Admin",
+    User = "User",
+    Vendor = "Vendor",
+    common = "common"
+}
