@@ -1,15 +1,66 @@
+"use client";
+
+
 import { Product } from '@/types/item';
-import React from 'react'
+import React, { use, useEffect, useState } from 'react'
 // import AllWidth from '../Boots/AllWidth';
 import StarIcon0 from '@/components/icons/StarIcon';
-import { Car, KeyRound, ShoppingCart, Star } from 'lucide-react';
-import { FaBuysellads, FaRupeeSign } from 'react-icons/fa';
+import { Car, Check, KeyRound, Loader, ShoppingCart, Star } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import { formatPrice, server_url } from '@/components/Constant';
+import ContainerLoader from '@/components/mini/ContainerLoader';
+import { useDispatch, useSelector } from 'react-redux';
+import { CartItem, ItemStatus } from '@/types/logistics';
+import Link from 'next/link';
 
 interface curr {
     product : Product;
 }
 
 const DetailsCard:React.FC<curr> = ({product}) => {
+
+    const dispatch = useDispatch();
+    const cart = useSelector((state: any) => state.cart);
+    const [isLoading , Setloading] = useState<boolean>(false);
+    const [isInCart,setInCart] = useState(false);
+    const {data} = useSession();
+
+    useEffect(() => {
+        cart.CartItems.map(
+            (item: CartItem) => {
+                console.log(item.productId, product.id)
+                if(item.productId === product.id){
+                    console.log('in cart',item.productId);
+                    setInCart(true);
+                    return;
+                }
+            }
+        );
+        // console.log(cart.CartItems)
+    }, [product, cart.CartItems]);
+    
+    const addToCart = () => {
+        Setloading(true);
+        const payload = {
+            productId: product.id,
+            userId: data?.user.id,
+            quantity: 1,
+            status: ItemStatus.Default,
+        }
+        console.log('add to cart',payload);
+          axios.post(server_url+"/api/cart",payload)
+          .then((res)=>{
+              console.log(res);
+              dispatch({type: 'ADD_TO_CART', payload : payload});
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+        .finally(()=>{
+            Setloading(false);
+        })
+    }
   return (
     <div className='w-[60%] flex flex-col gap-5 max-md:w-full 
     bg-slate-700/0 px-5 max-sm:py-5 py-20'>
@@ -47,41 +98,76 @@ const DetailsCard:React.FC<curr> = ({product}) => {
         <div className=' w-full h-20 bg-black/0 font-semibold'>
             <div className=' flex flex-col gap-2'>
                 <div className='flex items-center gap-1 text-3xl'>
-                    <span>₹</span>  
-                    <h1>{product.price}</h1>
+                    <h1>{formatPrice(product.price)}</h1>
                     <div className=' bg-teal-600/20 scale-75 text-teal-800 border border-teal-800 hover:cursor-pointer 
                     text-lg ml-2 rounded px-2 py-1 mt-1'>
                             {product.discount}% off
                     </div>
                 </div>
                 <div className=''>
-                    <del className=' text-lg text-[#a5a5a5]'>₹ {product.actualPrice}</del>
+                    <del className=' text-lg text-[#a5a5a5]'>{formatPrice(product.actualPrice)}</del>
                 </div>
             </div>
         </div>
 
-        <div className=' w-full flex h-20 max-sm:flex-col gap-2 max-sm:relative 
-        max-sm:top-0 sticky top-[100px] bg-white/0 rounded-md'>
-            <div className=' flex items-center justify-center  px-16 py-3 text-lg
-             gap-4 font-semibold text-white bg-black rounded-full hover:text-black 
-             transition-all duration-500 active:scale-95 active:text-white active:bg-black
-              hover:bg-white hover:cursor-pointer max-sm:w-full
-              border-2 w-fit'>
-                <span>
-                    <ShoppingCart size={20}/>
-                </span>
-                <span>Add to Cart</span>
+        <div className=' bg-[#fafafa] pb-5 w-full flex pt-10 h-[140px] max-sm:flex-col gap-2 max-sm:relative 
+        max-sm:top-0 select-none sticky top-[40px] rounded-md'>
+           {
+            isLoading ? 
+            <div className=' w-full flex items-center justify-center'>
+                <ContainerLoader/>
             </div>
-            <div className=' flex items-center justify-center  px-16 py-3 text-lg
-             gap-4 font-semibold text-white bg-[#f6c94c] rounded-full hover:text-[#f6c94c] 
-             transition-all duration-500 active:scale-95 active:text-white active:bg-[#f6c94c]
-              hover:bg-white hover:cursor-pointer 
-              border-2 w-fit max-sm:w-full'>
-                <span>
-                    {/* <FaBuysellads size={20}/> */}
-                </span>
-                <span>Buy now</span>
-            </div>
+            :
+            <> {
+                isInCart ? 
+                <Link href='/cart' className=' h-full'>
+                    <div  className="group flex h-full items-center justify-center px-16 py-3 text-lg
+                        gap-4 font-semibold text-white bg-black rounded-full hover:text-black 
+                        transition-all duration-500 active:scale-95 active:text-white active:bg-black
+                        hover:bg-white hover:cursor-pointer max-sm:w-full min-w-[320px]
+                        border-2 w-fit relative">
+                        <div className="bg-green-600 rounded-full p-1 absolute top-0 right-0">
+                            <Check size={15} />
+                        </div>
+                        <div className=' flex gap-2 items-center justify-center
+                        group-hover:scale-125 duration-75 transition-all '>
+                            <span>
+                                <ShoppingCart size={20} className="" />
+                            </span>
+                            <span className="group-hover:hidden">Added to Cart</span>
+                            <span className="hidden group-hover:block">View Item in Cart</span>
+                        </div>
+                    </div>
+                </Link>
+
+                :
+                <div className=' group flex items-center justify-center  px-16 py-3 text-lg
+                gap-4 font-semibold text-white bg-black rounded-full hover:text-black 
+                transition-all duration-500 active:scale-95 active:text-white active:bg-black
+                hover:bg-white hover:cursor-pointer max-sm:w-full
+                border-2 w-fit' onClick={addToCart}>
+                    <div className=' flex items-center justify-center gap-2 
+                    group-hover:scale-125 duration-75 transition-all '>
+                        <span>
+                            <ShoppingCart size={20}/>
+                        </span>
+                        <span >Add to Cart</span>
+                    </div>
+                </div>
+                }
+                
+                <div className=' flex items-center justify-center  px-16 py-3 text-lg
+                gap-4 font-semibold text-white bg-[#f6c94c] rounded-full hover:text-[#f6c94c] 
+                transition-all duration-500 active:scale-95 active:text-white active:bg-[#f6c94c]
+                hover:bg-white hover:cursor-pointer 
+                border-2 w-fit max-sm:w-full'>
+                    <span>
+                        {/* <FaBuysellads size={20}/> */}
+                    </span>
+                    <span>Buy now</span>
+                </div>
+            </>
+           }
         </div>
         
         <div className=' w-full h-fit bg-slate-500/0 mt-[70px]'>
@@ -111,7 +197,7 @@ const DetailsCard:React.FC<curr> = ({product}) => {
                 <div className=' w-full h-fit flex flex-wrap gap-5'>
                     {
                         product.categories.map((category, index) => (
-                            <div className=' flex items-center px-6 text-lg font-semibold text-white py-2
+                            <div key={category.id+index} className=' flex items-center px-6 text-lg font-semibold text-white py-2
                              rounded-full bg-indigo-500 gap-2'>
                                 {category.name}
                             </div>

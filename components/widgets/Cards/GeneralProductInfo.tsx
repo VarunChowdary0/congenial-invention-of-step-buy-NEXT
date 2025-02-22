@@ -8,7 +8,8 @@ import Collapse from '../../popups/Collpse';
 import PopUp from '../../popups/PopUp';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ContainerLoader from '../../mini/ContainerLoader';
-import { server_url } from '../../Constant';
+import { formatPrice, server_url } from '../../Constant';
+import { format } from 'path';
 
 interface ProductData {
     id : string;
@@ -249,7 +250,7 @@ const GeneralProductInfo: React.FC<GeneralProductInfoProps> = ({ ProductData,Sto
             <div className="mt-4 p-4 bg-green-50 rounded-md">
                 <p className="text-sm text-green-700">
                     You are offering a {discount_}% discount. Customers save 
-                    ₹{(actualPrice - calculatedPrice).toFixed(2)}
+                    {" "+ formatPrice((actualPrice - calculatedPrice))}
                 </p>
             </div>
         )}

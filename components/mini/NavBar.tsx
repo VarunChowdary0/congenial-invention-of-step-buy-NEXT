@@ -17,6 +17,7 @@ import debounce from 'lodash/debounce'
 import axios from 'axios';
 import { common_operation,operations, operations_admin, server_url } from '../Constant';
 import { UserType } from '@/types/personal';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -25,14 +26,30 @@ const NavBar = () => {
   const {data: session, status} = useSession();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  console.log(session,status);
+  // console.log(session,status);
   const [showSearch,setShowSearch] = useState<boolean>(false);
   const searchInput = useRef<HTMLInputElement | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult>({
     operations: session ? (session.user.role == UserType.Admin ? operations_admin: operations) : common_operation,
     products: []
   });
+  const cartItems = useSelector((state: any) => state.cart.CartItems.length);
   const [isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useDispatch();
+    useEffect(()=>{
+      axios.get(server_url+"/api/cart/"+session?.user.id)
+      .then((res)=>{
+        console.log(res.data);
+        res.data.forEach((item: any) => {
+          dispatch({type: 'ADD_TO_CART', payload : item});
+        });
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    },[status])
+
   const performSearch = debounce(async (query: string) => {
     if (!query.trim()) {
       setSearchResults({ operations: [], products: [] })
@@ -47,7 +64,7 @@ const NavBar = () => {
     // Fetch products from API
     axios.get(`${server_url}/api/product/deepsearch/?query=${query}`)
     .then((res)=>{
-        console.log(res.data)
+        // console.log(res.data)
         setSearchResults({
         operations: matchedOperations,
         products: res.data
@@ -61,14 +78,8 @@ const NavBar = () => {
     });
   }, 300);
 
-  const encrypt = (text: string) => {
-    const res = encodeURI(text);
-    console.log("en: ", res);
-    return res;
-  };
-  
   useEffect(()=>{
-    console.log(searchResults);
+    // console.log(searchResults);
     if(searchResults.products.length === 0 && 
       searchResults.operations.length === 0 &&
       searchInput.current?.value.trim() === ""){
@@ -77,7 +88,7 @@ const NavBar = () => {
           products: []
         })
       }
-      console.log(searchResults.products);
+      // console.log(searchResults.products);
   },[searchResults,showSearch]);
   useEffect(()=>{
     setSearchResults({
@@ -151,7 +162,7 @@ const NavBar = () => {
             { session?.user?.role === UserType.Admin ?
             searchResults.products.map(product => (
               <div 
-                  key={encrypt(product.id)}
+                  key={product.id}
                   className="flex relative items-center gap-3 p-3 hover:bg-[#2a2929] 
                     cursor-pointer rounded-sm group"
                 >
@@ -176,7 +187,7 @@ const NavBar = () => {
             className=' text-sky-600 hover:text-sky-200 text-sm transition-all inline-flex items-center gap-1'
               href={`/product/${product.id}`}>view</Link>
               <Link className=' text-indigo-600 hover:text-indigo-200 text-sm transition-all inline-flex items-center gap-1'
-               href={`/admin/products/edit/${(product.id)}}`}>
+               href={`/admin/products/edit/${(product.id)}`}>
               <span><Pencil className=' w-3'/></span>
               <span>Edit</span>
               </Link>
@@ -221,7 +232,15 @@ const NavBar = () => {
     )
   }  
 
-
+  // const itemLoad = useSelector((state: any) => state.loader.loading);
+  // if(itemLoad){
+  //   return (
+  //     <div className=' flex items-center justify-center bg-black/30 backdrop-blur-sm 
+  //     z-[1300] fixed top-30 left-0 right-0 bottom-0'>
+  //         <ContainerLoader/>
+  //     </div>    
+  //   );
+  // }
   if(status === 'loading') {
     return <div className=' z-[1300] fixed top-0 left-0 right-0 bottom-0 
   bg-white flex items-center flex-col gap-5 justify-center'>
@@ -364,18 +383,20 @@ const NavBar = () => {
                   <p className='  p-0 text-xs  '>Orders</p>
                   <p className=' font-semibold '>& Deliveries</p>
             </div>
-            <div className='text-black font-semibold flex hover:cursor-pointer
-                hover:bg-[#2a2929] hover:text-white hover:ring-4
-                hover:ring-[#6571e0] transition-all duration-300
-              px-2 bg-white rounded-md relative'>
-                  <ShoppingCartIcon className="h-6 w-6" />
-                  <span className="absolute top-1 right-[12px] bg-green-500 text-white rounded-full 
-                   w-4 h-4
-                   flex items-center justify-center text-xs">
-                    5
-                  </span>
-                  <span className=' mt-3 font-semibold'>Cart</span>
-            </div>
+            <Link href={"/cart"}>
+              <div className='text-black font-semibold flex hover:cursor-pointer
+                  hover:bg-[#2a2929] hover:text-white hover:ring-4
+                  hover:ring-[#6571e0] transition-all duration-300
+                px-2 bg-white rounded-md relative'>
+                    <ShoppingCartIcon className="h-6 w-6" />
+                    <span className="absolute top-1 right-[12px] bg-green-500 text-white rounded-full 
+                    w-4 h-4
+                    flex items-center justify-center text-xs">
+                      {cartItems}
+                    </span>
+                    <span className=' mt-3 font-semibold'>Cart</span>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -384,3 +405,7 @@ const NavBar = () => {
 }
 
 export default NavBar
+
+function dispatch(arg0: { type: string; payload: any; }) {
+  throw new Error('Function not implemented.');
+}

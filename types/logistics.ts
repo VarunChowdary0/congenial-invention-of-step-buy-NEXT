@@ -1,19 +1,21 @@
 import exp from "constants";
 import { Inter_Tight } from "next/font/google";
 import { Address } from "./personal";
+import { Product } from "./item";
 
 
 
 export enum ItemStatus{
-    Default = "Default",
-    Deleted = "Deleted",
-    SaveForLater = "SaveForLater"
+    Default = 1,
+    SaveForLater = 2
 }
 
 export interface CartItem{
-    ProductId : string;
-    Quantity : number;
-    Status : ItemStatus;
+    id : string;
+    productId : string;
+    quantity : number;
+    status : ItemStatus;
+    product? : Product
 }
 
 export interface Cart{

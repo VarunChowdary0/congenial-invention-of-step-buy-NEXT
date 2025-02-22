@@ -14,7 +14,6 @@ import VideoComponent from '@/components/VideoComponent'
 import GeneralProductInfo from '@/components/widgets/Cards/GeneralProductInfo'
 import ContainerLoader from '@/components/mini/ContainerLoader'
 import { server_url } from '@/components/Constant'
-import { a } from 'framer-motion/client'
 import CategoryManagement from '@/components/widgets/Cards/CategoryManagement'
 import FeatureManagement from '@/components/widgets/Cards/FeatureManagement'
 

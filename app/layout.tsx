@@ -1,7 +1,9 @@
+// this is a server page.
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import SessionProvider from "@/components/SessionProvider";
 import "./globals.css";
+import Providers from "@/components/Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,26 +22,21 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/images/logo/favicon.ico", sizes: "any" },
-      { url: "/images/logo/icon.png", type: "image/png" }
+      { url: "/images/logo/icon.png", type: "image/png" },
     ],
     apple: [
-      { url: "/images/logo/apple-icon.png", sizes: "180x180", type: "image/png" }
-    ]
+      { url: "/images/logo/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
-}
+};
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider>
+        <Providers> 
           {children}
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   );
