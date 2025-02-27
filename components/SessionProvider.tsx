@@ -4,10 +4,19 @@ import { SessionProvider as Provider } from "next-auth/react"
 import NavBar from "./mini/NavBar";
 import { useSelector } from "react-redux";
 import ContainerLoader from "./mini/ContainerLoader";
+import Footer from "./mini/Footer";
+import { usePathname } from "next/navigation";
+
+interface RootState {
+  loader: {
+    loading: boolean;
+}
+}
+
 
 const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-  const itemLoad = useSelector((state: any) => state.loader.loading);
-
+  const itemLoad = useSelector((state:RootState) => state.loader.loading);
+  const path = usePathname();
   return (
     <Provider>
       <div className="min-h-screen flex flex-col ">
@@ -25,6 +34,9 @@ const SessionProvider = ({ children }: { children: React.ReactNode }) => {
           <main className="flex-1">
             {children}
           </main>
+          {! path.includes("admin") &&
+              <Footer/>
+          }
       </div>
     </Provider>
   )

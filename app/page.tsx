@@ -1,6 +1,5 @@
 'use client'
 import Banner from "@/components/widgets/Boots/Banner";
-import { useSession } from "next-auth/react";
 
 const bannerImages:string[] = [
   "https://m.media-amazon.com/images/S/aplus-media-library-service-media/20116df5-f597-4e26-bc02-f9272d667213.__CR0,0,1464,600_PT0_SX1464_V1___.jpg",
@@ -15,7 +14,6 @@ const bannerImages:string[] = [
 
 ];
 export default function Home() {
-  const { data: session } = useSession();
 
   return (
     <div className="min-h-screen bg-gray-50 no_show_bar">

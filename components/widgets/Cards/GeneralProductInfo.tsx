@@ -9,7 +9,6 @@ import PopUp from '../../popups/PopUp';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ContainerLoader from '../../mini/ContainerLoader';
 import { formatPrice, server_url } from '../../Constant';
-import { format } from 'path';
 
 interface ProductData {
     id : string;

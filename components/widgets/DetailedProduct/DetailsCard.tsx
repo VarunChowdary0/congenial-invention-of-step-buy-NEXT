@@ -2,16 +2,15 @@
 
 
 import { Product } from '@/types/item';
-import React, { use, useEffect, useState } from 'react'
-// import AllWidth from '../Boots/AllWidth';
+import React, { useEffect, useState } from 'react'
 import StarIcon0 from '@/components/icons/StarIcon';
-import { Car, Check, KeyRound, Loader, ShoppingCart, Star } from 'lucide-react';
+import { Check, KeyRound, ShoppingCart, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { formatPrice, server_url } from '@/components/Constant';
 import ContainerLoader from '@/components/mini/ContainerLoader';
 import { useDispatch, useSelector } from 'react-redux';
-import { CartItem, ItemStatus } from '@/types/logistics';
+import { Cart, CartItem, ItemStatus } from '@/types/logistics';
 import Link from 'next/link';
 
 interface curr {
@@ -21,7 +20,7 @@ interface curr {
 const DetailsCard:React.FC<curr> = ({product}) => {
 
     const dispatch = useDispatch();
-    const cart = useSelector((state: any) => state.cart);
+    const cart = useSelector((state: {cart : Cart}) => state.cart);
     const [isLoading , Setloading] = useState<boolean>(false);
     const [isInCart,setInCart] = useState(false);
     const {data} = useSession();
@@ -52,7 +51,8 @@ const DetailsCard:React.FC<curr> = ({product}) => {
           axios.post(server_url+"/api/cart",payload)
           .then((res)=>{
               console.log(res);
-              dispatch({type: 'ADD_TO_CART', payload : payload});
+              console.log(res.data.id);
+              dispatch({type: 'ADD_TO_CART', payload : {...payload, id : res.data.id}});
         })
         .catch((err)=>{
             console.log(err);

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { JSX, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import SignOutButton from '../SignOutButton'
 import { useSession } from 'next-auth/react';
@@ -18,6 +18,7 @@ import axios from 'axios';
 import { common_operation,operations, operations_admin, server_url } from '../Constant';
 import { UserType } from '@/types/personal';
 import { useDispatch, useSelector } from 'react-redux';
+import { Cart, CartItem } from '@/types/logistics';
 
 
 
@@ -33,7 +34,7 @@ const NavBar = () => {
     operations: session ? (session.user.role == UserType.Admin ? operations_admin: operations) : common_operation,
     products: []
   });
-  const cartItems = useSelector((state: any) => state.cart.CartItems.length);
+  const cartItems = useSelector((state: { cart : Cart }) => state.cart.CartItems.length);
   const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const NavBar = () => {
       axios.get(server_url+"/api/cart/"+session?.user.id)
       .then((res)=>{
         console.log(res.data);
-        res.data.forEach((item: any) => {
+        res.data.forEach((item: CartItem) => {
           dispatch({type: 'ADD_TO_CART', payload : item});
         });
       })
@@ -406,6 +407,3 @@ const NavBar = () => {
 
 export default NavBar
 
-function dispatch(arg0: { type: string; payload: any; }) {
-  throw new Error('Function not implemented.');
-}

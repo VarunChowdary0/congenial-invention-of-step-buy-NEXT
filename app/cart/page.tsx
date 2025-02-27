@@ -1,7 +1,7 @@
 'use client'
 
 import { Cart, CartItem, ItemStatus } from '@/types/logistics'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Image from 'next/image'
 import { BadgeInfoIcon, FlagIcon, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
@@ -9,11 +9,10 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { formatPrice, server_url } from '@/components/Constant'
 import Link from 'next/link'
-import { div } from 'framer-motion/client'
 import { CartActions } from '@/redux/reducer'
 
 const CartPage = () => {
-  const cart: Cart = useSelector((state: any) => state.cart)
+  const cart: Cart = useSelector((state: { cart : Cart }) => state.cart)
   const dispatch = useDispatch()
   const router = useRouter();
 
@@ -52,19 +51,42 @@ const CartPage = () => {
     })
   }
 
+  useEffect(()=>{
+    cart.CartItems.map((item,idx)=>{
+      console.log(item.product);
+      if(item.product === undefined){
+        dispatch({type : "LOADING"})
+        axios.get(server_url+"/api/product/"+item.productId)
+        .then((res)=>{
+          console.log(res.data);
+          dispatch({ 
+            type: CartActions.UPDATE_CART_ITEM, 
+            payload: { ...item, product: res.data }
+          })
+        })
+        .catch((err)=>{
+          console.log(err);
+        })
+        .finally(()=>{
+          dispatch({type : "LOADED"})
+        })
+      }
+    })
+  },[])
+
   const getTotalPrice = () => {
-    return formatPrice(cart.CartItems.reduce((total, item) => 
+    return formatPrice(cart.CartItems.filter((x)=>x.status == ItemStatus.Default).reduce((total, item) => 
       total + ((item.product?.actualPrice || 0) * item.quantity), 0
     ))
   }
   const getTotalDiscountPrice = () => {
-    return formatPrice(cart.CartItems.reduce((total, item) => 
+    return formatPrice(cart.CartItems.filter((x)=>x.status == ItemStatus.Default).reduce((total, item) => 
       total + ((item.product?.price || 0) * item.quantity), 0
     ))
   }
   
   const getSavingPrice = () => {
-    return formatPrice(cart.CartItems.reduce((total, item) => 
+    return formatPrice(cart.CartItems.filter((x)=>x.status == ItemStatus.Default).reduce((total, item) => 
       total + ((((item.product?.actualPrice || 0) - (item.product?.price || 0))) * item.quantity), 0
     ))
   }

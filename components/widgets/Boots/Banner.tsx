@@ -12,7 +12,6 @@ interface BannerProps {
 const Banner = ({ images, autoPlayInterval = 5000 }: BannerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState<'left' | 'right'>('right')
-  const [sliding, setSliding] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {

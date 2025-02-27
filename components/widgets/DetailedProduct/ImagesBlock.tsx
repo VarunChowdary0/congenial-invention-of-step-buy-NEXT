@@ -3,7 +3,6 @@ import React from 'react'
 import { MdFullscreenExit } from 'react-icons/md';
 import Image from 'next/image'
 import VideoComponent from '@/components/VideoComponent';
-import { p } from 'framer-motion/client';
 
 interface curr{
     fullImg : number;

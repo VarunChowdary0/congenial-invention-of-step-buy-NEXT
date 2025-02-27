@@ -5,11 +5,9 @@ import { Product } from '@/types/item';
 import axios from 'axios';
 import { Loader2, ArrowUpDown, Pencil } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Page = () => {
-    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([])
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState(true)
@@ -62,7 +60,7 @@ const Page = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-60px)]  top-[56px] bg-gray-50">
+        <div className="h-[calc(100vh-60px)]  top-[156px] bg-gray-50">
             <PageHeader title='All Products'>
                 <div></div>
             </PageHeader>

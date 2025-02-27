@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams, useSearchParams } from 'next/navigation'
-import React, { Key, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
 import { server_url } from '@/components/Constant'
@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import PopUp from '@/components/popups/PopUp'
 import ImagesBlock from '@/components/widgets/DetailedProduct/ImagesBlock'
 import DetailsCard from '@/components/widgets/DetailedProduct/DetailsCard'
+import Footer from '@/components/mini/Footer'
 
 
 const ProductPage = () => {
@@ -173,7 +174,9 @@ const ProductPage = () => {
 
       <div className=' flex w-full h-[300px] bg-red-400'>Similar matches</div>
       <div className=' flex w-full h-[600px] bg-blue-400'>Reviews</div>
-      <div className=' flex w-full h-[200px] bg-green-400'>footer</div>
+      {/* <div className=' flex w-full h-fit bg-green-400'>
+        <Footer/>
+      </div> */}
     </div>
   )
 }

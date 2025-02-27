@@ -1,8 +1,7 @@
 import React from 'react'
 import SignOutButton from '../SignOutButton'
 import Link from 'next/link'
-import { Boxes, Settings, Settings2, UserCheck2 } from 'lucide-react'
-import { FaBuyNLarge } from 'react-icons/fa'
+import { Boxes, Settings2, UserCheck2 } from 'lucide-react'
 
 const DropDownUser:React.FC = () => {
   return (
