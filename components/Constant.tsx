@@ -1,6 +1,7 @@
 import { SearchOperation } from "@/types/search";
-import { Home, Package, Pencil } from "lucide-react";
+import { Home, MapPin, Package, Pencil, WalletCardsIcon } from "lucide-react";
 import { CgAdd } from "react-icons/cg";
+import { MdSupportAgent } from "react-icons/md";
 
 // export const server_url = "http://localhost:5000";
 export const server_url = "http://localhost:5283";
@@ -26,6 +27,27 @@ export const operations: SearchOperation[] = [
       description: 'Check your orders',
       icon: <Package className="w-4 h-4" />,
       action:'/orders'
+    },
+    {
+      id: '11',
+      title: 'Manage Address',
+      description: 'Add, edit or delete your address',
+      icon: <MapPin className="w-4 h-4" />,
+      action:'/address'
+    },
+    {
+      id: '12',
+      title: 'Customer Support',
+      description: 'Need help during your shopping journey or have any query',
+      icon: <MdSupportAgent className="w-4 h-4" />,
+      action:'/support'
+    },
+    {
+      id: '13',
+      title: 'Payments Options',
+      description: 'Add/Update card, netbanking or UPI details',
+      icon: <WalletCardsIcon className="w-4 h-4" />,
+      action:'/payments'
     }
 ]
 

@@ -31,47 +31,34 @@ const ProfilePage: React.FC = () => {
         icon: <MdSecurity size={70} className=' text-[#1d55c3]'/>,
         title: 'Update Credentials',
         description: 'Edit name,phone number,email and update password',
-        path: '/update/credentials'
+        path: '/credentials'
     }
     ,{
         icon: <Box className=' text-[#5e4f38]' size={50} />,
         title: 'Your Orders',
         description: 'See all your orders and track them',
-        path: ''
+        path: '/orders'
     }
     ,{
         icon: <MdLocationOn className=' text-[#1cb638]' size={50} />,
         title: 'Manage Address',
         description: 'Add,edit or delete your address',
-        path: ''
+        path: '/address'
     }
     ,{
         icon: <MdOutlinePayments className=' text-[#5a9ec1]' size={50} />,
         title: 'Payments Options',
-        description: 'Add,edit or delete your address',
-        path: ''
+        description: 'Add/Update card, netbanking or UPI details',
+        path: '/payments'
     }
     ,{
         icon: <MdSupportAgent className=' text-[#141414]' size={50} />,
         title: 'Customer Support',
-        description: 'Add,edit or delete your address',
-        path: ''
+        description: 'Need help during your shopping journey or have any query',
+        path: '/support'
     }
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      await axios.put(`${server_url}/api/user/${session?.user?.id}`, formData)
-      setIsEditing(false)
-      // Refresh session here if needed
-    } catch (error) {
-      console.error('Error updating profile:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   if (status === 'loading') {
     return <ContainerLoader />
@@ -98,7 +85,7 @@ const ProfilePage: React.FC = () => {
                max-sm:justify-center max-sm:w-[100vw] w-[65vw] gap-3  '>
                     {
                         blocks.map((ele,idx)=>
-                            <Link href={ele.path}
+                            <Link key={ele.title + idx} href={ele.path}
                                 className='flex items-center justify-center w-[340px] 
                                 shadow-sm hover:cursor-pointer hover:shadow-md transition-all 
                                 duration-500 bg-white rounded-md p-5  gap-4 bg-black/20'>

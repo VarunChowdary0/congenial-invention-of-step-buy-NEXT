@@ -1,25 +1,27 @@
 export interface User{
-    Id : string;
-    Name : string;
-    Email : string;
-    Phone : string;
-    Address : Address
+    id : string;
+    name : string;
+    email : string;
+    phone : string;
+    address : Address
 }
 
 export interface Address{
-    HouseNo : string;
-    BuildingName : string;
-    PlotNo :string;
-    RoadNumber : string;
-    ColonyName : string;
-    AreaName : string;
-    CityName : string;
-    DistrictName : string ;
-    State : string;
-    Country : string;
-    Pin : number;
-    Phone : string;
-    Name : string;
+    id: string,
+    userId: string,
+    houseNo: string,
+    buildingName: string,
+    plotNo: string,
+    roadNumber: string,
+    colonyName: string,
+    areaName: string,
+    cityName: string,
+    districtName: string,
+    state: string,
+    country: string,
+    pin: string,
+    alternatePhone: string,
+    nameOfReciver : string
 }
 
 export enum UserType{

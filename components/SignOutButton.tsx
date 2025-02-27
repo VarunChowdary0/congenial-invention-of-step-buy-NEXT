@@ -16,7 +16,7 @@ export default function SignOutButton() {
   if (status !== "authenticated") {
     return (
       <button
-        onClick={() => router.push("/auth")}
+        onClick={() => router.push("/api/auth")}
         className="text-black font-semibold flex hover:cursor-pointer
                 hover:bg-[#2a2929] hover:text-white hover:ring-4
                 hover:ring-[#6571e0] transition-all duration-300  max-sm:text-xs max-sm:py-3 max-sm:p-0 max-sm:ml-2

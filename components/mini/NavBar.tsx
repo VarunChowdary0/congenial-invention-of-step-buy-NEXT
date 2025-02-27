@@ -15,7 +15,7 @@ import PopUp from '../popups/PopUp';
 import { SearchResult } from '@/types/search'
 import debounce from 'lodash/debounce'
 import axios from 'axios';
-import { common_operation,operations, operations_admin, server_url } from '../Constant';
+import { common_operation,formatPrice,operations, operations_admin, server_url } from '../Constant';
 import { UserType } from '@/types/personal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Cart, CartItem } from '@/types/logistics';
@@ -39,6 +39,7 @@ const NavBar = () => {
 
     const dispatch = useDispatch();
     useEffect(()=>{
+      console.log(session);
       axios.get(server_url+"/api/cart/"+session?.user.id)
       .then((res)=>{
         console.log(res.data);
@@ -178,7 +179,7 @@ const NavBar = () => {
                 <div>
                 <p className="text-sm text-gray-200">{product.name}</p>
                 <p className="text-xs text-gray-400">
-                  • ${product.price}
+                  • {formatPrice(product.price)}
                 </p>
             </div>
             <div
@@ -214,7 +215,7 @@ const NavBar = () => {
                 <div>
               <p className="text-sm text-gray-200">{product.name}</p>
               <p className="text-xs text-gray-400">
-                • ${product.price}
+                • {formatPrice(product.price)}
               </p>
             </div>
           </Link>
@@ -285,7 +286,7 @@ const NavBar = () => {
                 <div className='  mt-2'>
                   <Logo h={55} w={55}/>
                 </div>
-                <h1 className="text-xl font-bold">Step Buy</h1>
+                <h1 className="text-xl font-bold text-[#092617]">Step Buy</h1>
                 </div>
               {/* <h1 className="text-xl font-bold">Step Buy</h1> */}
             </Link>
