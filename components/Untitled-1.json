@@ -1,0 +1,69 @@
+[
+  {
+    "userId": "string", 
+    "productId": "string",
+    "quantity": 0,
+    "id": "string",
+    "dateOrdered": "2025-02-27T08:49:15.839Z",
+    "billId": "string",
+    "bill": {
+      "id": "string",
+      "subTotal": 0,
+      "deliveryCharge": 0,
+      "tax": 0,
+      "totalAmount": 0,
+      "status": 0,
+      "paymentMethod": 0
+    },
+    "deliveryId": "string",
+    "delivery": {
+      "id": "string",
+      "addressId": "string",
+      "address": {
+        "id": "string",
+        "userId": "string",
+        "houseNo": "string",
+        "buildingName": "string",
+        "plotNo": "string",
+        "roadNumber": "string",
+        "colonyName": "string",
+        "areaName": "string",
+        "cityName": "string",
+        "districtName": "string",
+        "state": "string",
+        "country": "string",
+        "pin": "string"
+      },
+      "status": 0,
+      "currentLocation": "string",
+      "deliveryInstructions": [
+        {
+          "id": "string",
+          "instruction": "string",
+          "deliveryId": "string",
+          "delivery": "string"
+        }
+      ]
+    }
+  }
+]
+
+
+
+
+{
+  "userId": "ec18b1e4-5f53-4956-9cb6-62f29880f25e",
+  "houseNo": "5-43/6",
+  "buildingName": "",
+  "plotNo": "",
+  "roadNumber": "SBI Line",
+  "colonyName": "Sunjav Nagar",
+  "areaName": "Laxmidevipally",
+  "cityName": "Kothagudem",
+  "districtName": "Bhadradri Kothagudem",
+  "state": "Telangana",
+  "country": "India",
+  "pin": "507101",
+  "alternatePhone": "8497905354",
+  "nameOfReciver": "Shilpa Poludasu"
+}

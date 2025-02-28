@@ -18,41 +18,46 @@ export const common_operation : SearchOperation[] = [
     }
 ]
 
+export const loggeredOps:SearchOperation[] = [
+  {
+    id: '11',
+    title: 'Manage Address',
+    description: 'Add, edit or delete your address',
+    icon: <MapPin className="w-4 h-4" />,
+    action:'/address'
+  },
+  {
+    id: '12',
+    title: 'Customer Support',
+    description: 'Need help during your shopping journey or have any query',
+    icon: <MdSupportAgent className="w-4 h-4" />,
+    action:'/support'
+  },
+  {
+    id: '13',
+    title: 'Payments Options',
+    description: 'Add/Update card, netbanking or UPI details',
+    icon: <WalletCardsIcon className="w-4 h-4" />,
+    action:'/payments'
+  }
+]
+
 
 export const operations: SearchOperation[] = [
     ...common_operation,
+    ...loggeredOps,
     {
       id: '2',
       title: 'View Orders',
       description: 'Check your orders',
       icon: <Package className="w-4 h-4" />,
       action:'/orders'
-    },
-    {
-      id: '11',
-      title: 'Manage Address',
-      description: 'Add, edit or delete your address',
-      icon: <MapPin className="w-4 h-4" />,
-      action:'/address'
-    },
-    {
-      id: '12',
-      title: 'Customer Support',
-      description: 'Need help during your shopping journey or have any query',
-      icon: <MdSupportAgent className="w-4 h-4" />,
-      action:'/support'
-    },
-    {
-      id: '13',
-      title: 'Payments Options',
-      description: 'Add/Update card, netbanking or UPI details',
-      icon: <WalletCardsIcon className="w-4 h-4" />,
-      action:'/payments'
     }
 ]
 
   export const operations_admin: SearchOperation[] = [
     ...common_operation,
+    ...loggeredOps,
     {
       id: '3',
       title: 'New Product',
