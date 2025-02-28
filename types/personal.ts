@@ -25,8 +25,8 @@ export interface Address{
 }
 
 export enum UserType{
-    Admin = "Admin",
-    User = "User",
-    Vendor = "Vendor",
-    common = "common"
+    Admin = 1,
+    User = 2,
+    Vendor = 3,
+    common = 4
 }
