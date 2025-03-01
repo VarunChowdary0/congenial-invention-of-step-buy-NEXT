@@ -126,7 +126,7 @@ const NavBar = () => {
   const SearchCard = () => {
     if (isLoading) {
       return <div className="w-full text-white p-4 flex justify-center">
-        <ContainerLoader />
+        {/* <ContainerLoader /> */}
       </div>
     }
   

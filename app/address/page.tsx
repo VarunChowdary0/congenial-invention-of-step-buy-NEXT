@@ -9,6 +9,7 @@ import { MapPin, MapPinHouseIcon, PencilIcon, PlusCircleIcon, Trash2Icon } from 
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 
 interface PoperProps{
@@ -22,7 +23,7 @@ const page = () => {
   const parms = useSearchParams();
   const router = useRouter();
   const {data} = useSession();
-  const [load,setLoading] = useState<boolean>(false);
+  const dispach = useDispatch();
   const [message,setMsg] = useState<string>("");
   const [Temp,setTemp] = useState<Address>({
     id: "",
@@ -57,9 +58,11 @@ const page = () => {
 
   useEffect(() => {
     if (!data?.user?.id) return;
+    dispach({type:'LOADING'});
     axios.get(`${server_url}/api/address/${data.user.id}`)
       .then(res => setAddressess(res.data))
-      .catch(console.log);
+      .catch(console.log)
+      .finally(()=>dispach({type:'LOADED'}));
   }, [data?.user?.id]);
   
 
@@ -91,7 +94,7 @@ const page = () => {
 
   const AddNewAddress  = () => {
     if(checker()){
-        setLoading(true);
+        dispach({type:'LOADING'});
         axios.post(server_url+"/api/address",Temp)
         .then((res)=>{
           console.log(res);
@@ -119,14 +122,15 @@ const page = () => {
             alternatePhone: "",
             nameOfReciver : ""
           })
-          setLoading(false);
+          dispach({type:'LOADED'});
+
         })
      }
   }
 
   const UpdateAddress = () => {
     if(checker()){
-      setLoading(true);
+      dispach({type:'LOADING'});
       axios.put(server_url+"/api/address/"+Temp.id,Temp)
       .then((res)=>{
         setAddressess((addr)=>addr?.map((ad)=>ad.id === Temp.id?Temp:ad));
@@ -153,7 +157,7 @@ const page = () => {
           nameOfReciver : ""
         })
         router.back();
-        setLoading(false);  
+        dispach({type:'LOADED'}); 
       })
 
       setTemp({
@@ -177,7 +181,7 @@ const page = () => {
   }
 
   const deleteAddr = (id:string) => {
-    setLoading(true);
+    dispach({type:'LOADING'});
     axios.delete(server_url+"/api/address/"+id)
     .then((res)=>{
       setAddressess((addr)=>addr?.filter((ad)=>ad.id !== id));
@@ -186,7 +190,7 @@ const page = () => {
       console.log(err);
     })
     .finally(()=>{
-      setLoading(false);
+      dispach({type:'LOADED'});
     })
   } 
 
@@ -197,7 +201,7 @@ const page = () => {
       <div className="max-w-7xl mx-auto px-4">
         {
           parms.get('add') &&
-          <PopUp loading={load}>
+          <PopUp loading={false}>
              {/* <Poper 
                 heading='New Address' 
                 callback={AddNewAddress}
@@ -250,7 +254,18 @@ const page = () => {
                 value={Temp.plotNo}  
                 placeholder='B-22' />
             </div>
+            
         </div>
+        <div className=' flex flex-col max-sm:w-full gap-2'>
+              <label className=' text-sm font-semibold text-[#093212]' htmlFor="rdN">Road Name/Number
+              {/* <span className=' text-red-600 ml-1'>*</span> */}
+              </label>
+              <input type="text" id="rdN"  className={` w-full px-4 py-2 border rounded-md outline-none transition-all
+          focus:border-blue-500 `}
+          onChange={(e)=>setTemp((temp)=>({...temp,roadNumber:e.target.value}))}      
+          value={Temp.roadNumber}  
+                 placeholder='SBI Road' />
+            </div>
         <div className=' grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div className=' flex flex-col max-sm:w-full gap-2'>
               <label className=' text-sm font-semibold text-[#093212]' htmlFor="buldNme">Building Name</label>
@@ -335,7 +350,7 @@ const page = () => {
         }
         {
           parms.get('edit') &&
-          <PopUp loading={load}>
+          <PopUp loading={false}>
                     <div className=' w-[50vw] max-sm:w-[90vw] py-2  min-h-[700px]'>
       <div className=' w-full flex items-center gap-2 py-3 px-5 shadow'>
         <MapPinHouseIcon/>
@@ -384,6 +399,16 @@ const page = () => {
                 placeholder='B-22' />
             </div>
         </div>
+        <div className=' flex flex-col max-sm:w-full gap-2'>
+              <label className=' text-sm font-semibold text-[#093212]' htmlFor="rdN">Road Name/Number
+              {/* <span className=' text-red-600 ml-1'>*</span> */}
+              </label>
+              <input type="text" id="rdN"  className={` w-full px-4 py-2 border rounded-md outline-none transition-all
+          focus:border-blue-500 `}
+          onChange={(e)=>setTemp((temp)=>({...temp,roadNumber:e.target.value}))}      
+          value={Temp.roadNumber}  
+                 placeholder='SBI Road' />
+            </div>
         <div className=' grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div className=' flex flex-col max-sm:w-full gap-2'>
               <label className=' text-sm font-semibold text-[#093212]' htmlFor="buldNme">Building Name</label>
@@ -402,6 +427,7 @@ const page = () => {
           value={Temp.colonyName}  
                  placeholder='Gandi Nagar' />
             </div>
+
             <div className=' flex flex-col max-sm:w-full gap-2'>
               <label className=' text-sm font-semibold text-[#093212]' htmlFor="arN">Area Name
               <span className=' text-red-600 ml-1'>*</span>
@@ -489,7 +515,7 @@ const page = () => {
               <div className=' px-4 py-2 text-sm flex flex-col '> 
                   <p className=' mb-1 font-semibold'>{addr.nameOfReciver}</p>
                   <p className=''>{addr.buildingName.trim()!==""?addr.buildingName+" ,":"" } HNO: {addr.houseNo}</p>
-                  <p className=''>{addr.colonyName} </p>
+                  <p className=''>{addr.colonyName} {addr.roadNumber?", "+addr.roadNumber:"" }</p>
                   <p className=''>{addr.areaName}{addr.plotNo.trim()!==""?`, plot no: ${addr.plotNo}`:''} </p>
                   <p className=''>{addr.districtName} </p>
                   <p className=''>{addr.cityName} ,{addr.state} ,{addr.pin}</p>

@@ -27,7 +27,7 @@ const SessionProvider = ({ children }: { children: React.ReactNode }) => {
         } */}
         {itemLoad &&
               <div className=' flex items-center justify-center bg-black/30 backdrop-blur-sm 
-              z-[1300] fixed text-white top-0 left-0 right-0 bottom-0'>
+              z-[2500] fixed text-white top-0 left-0 right-0 bottom-0'>
                   <ContainerLoader></ContainerLoader>
               </div> 
         }

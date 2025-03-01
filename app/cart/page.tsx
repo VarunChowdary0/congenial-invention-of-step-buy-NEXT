@@ -1,7 +1,7 @@
 'use client'
 
 import { Cart, CartItem, ItemStatus } from '@/types/logistics'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Image from 'next/image'
 import { BadgeInfoIcon, FlagIcon, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
@@ -10,11 +10,15 @@ import axios from 'axios'
 import { formatPrice, server_url } from '@/components/Constant'
 import Link from 'next/link'
 import { CartActions } from '@/redux/reducer'
+import ContainerLoader from '@/components/mini/ContainerLoader'
 
 const CartPage = () => {
   const cart: Cart = useSelector((state: { cart : Cart }) => state.cart)
   const dispatch = useDispatch()
   const router = useRouter();
+
+
+  const [data_fetched,setDFD] = useState<boolean>(false);
 
 
   const UpdateItem = async (item:CartItem) => {
@@ -52,6 +56,7 @@ const CartPage = () => {
   }
 
   useEffect(()=>{
+    setDFD(false);
     cart.CartItems.map((item,idx)=>{
       console.log(item.product);
       if(item.product === undefined){
@@ -69,6 +74,7 @@ const CartPage = () => {
         })
         .finally(()=>{
           dispatch({type : "LOADED"})
+          setDFD(true);
         })
       }
     })
@@ -97,10 +103,15 @@ const CartPage = () => {
         <h1 className="text-2xl font-bold mb-8">Shopping Cart</h1>
         {!cart.CartItems.some(item => item.status === ItemStatus.Default) ? (
           <div className="text-start px-10 max-sm:text-center py-12">
-            <p className="text-gray-500 flex gap-2">
+            {!data_fetched ?
+              <p className="text-gray-500 flex gap-2">
               <span>
                 <BadgeInfoIcon/>  
-              </span> Your cart is empty</p>
+              </span> Your cart is empty
+            </p>
+            :
+            <ContainerLoader/>  
+          }
           </div>
         )
          : (

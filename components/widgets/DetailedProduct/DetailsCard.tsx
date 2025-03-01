@@ -51,8 +51,7 @@ const DetailsCard:React.FC<curr> = ({product}) => {
           axios.post(server_url+"/api/cart",payload)
           .then((res)=>{
               console.log(res);
-              console.log(res.data.id);
-              dispatch({type: 'ADD_TO_CART', payload : {...payload, id : res.data.id}});
+              dispatch({type: 'ADD_TO_CART', payload : payload});
         })
         .catch((err)=>{
             console.log(err);

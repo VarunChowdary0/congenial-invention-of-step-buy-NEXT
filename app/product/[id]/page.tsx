@@ -78,7 +78,11 @@ const ProductPage = () => {
   },[isFullScreen, product])
 
   if (loading) {
-    return <ContainerLoader />
+    return (
+      <div className=' w-full h-screen flex ic justify-center'>
+        <ContainerLoader />
+      </div>
+    )
   }
 
   if (error || !product) {
@@ -139,7 +143,8 @@ const ProductPage = () => {
                           />
                           :
                           (product.media[fullImg].link.match(/youtube.com/) || product.media[fullImg].link.match(/youtu.be/)) ?
-                          <div className=' min-w-[600px] max-sm:w-[85vw]  rounded-md overflow-hidden h-[100%] flex items-center z-50' 
+                          <div className=' min-w-[600px] max-sm:w-[85vw] bg-[#ffffff] 
+                            rounded-md overflow-hidden h-[100%] flex justify-center items-center z-50' 
                           dangerouslySetInnerHTML={{__html: product.media[fullImg].link}} />
                         :
                           <div className=' w-full min-w-[400px] flex h-fit items-center justify-center'>

@@ -95,7 +95,12 @@ const EditProductPage = () => {
 
   const Update_Tumbnail = () =>{
       setLoading(true);
-      axios.put(server_url+"/api/Product/"+String(params),{imageLink:Tumbnail})
+      const payload = {
+        name: ProductData?.name || "",
+        imageLink:Tumbnail
+      };
+      console.log(payload)
+      axios.put(server_url+"/api/Product/"+String(params),payload)
       .then((res)=>{
         setProductData(res.data);
         console.log(res.data);
