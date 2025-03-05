@@ -95,7 +95,7 @@ const ProductPage = () => {
   const ToRigth = () =>{
     return (
       <div onClick={() => setFullImg(prev => prev >= product.media.length - 1 ? -1 : prev + 1)} 
-        className='absolute h-[65%]  max-sm:h-[55%] top-20 group
+        className='absolute z-[1200] h-[65%]  max-sm:h-[55%] top-20 group
         flex items-center justify-center w-14 bg-black/0 right-0'>
           <ArrowRightCircle className=' text-[#aeaeae] group-hover:text-[#7f48ff] active:scale-110
            transition-all hover:cursor-pointer' size={30} />
@@ -106,7 +106,7 @@ const ProductPage = () => {
   const ToLeft = () =>{
     return (
       <div onClick={() => setFullImg(prev => prev <= -1 ? product.media.length - 1 : prev - 1)} 
-          className='absolute h-[65%]  max-sm:h-[55%] top-20 group
+          className='absolute z-[1200] h-[65%]  max-sm:h-[55%] top-20 group
           flex items-center justify-center w-14 bg-black/0 left-0'>
           <ArrowLeftCircle className='text-[#aeaeae] group-hover:text-[#7f48ff] active:scale-110
            transition-all hover:cursor-pointer' size={30}/>

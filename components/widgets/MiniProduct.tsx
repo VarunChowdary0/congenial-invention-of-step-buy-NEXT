@@ -23,7 +23,8 @@ const MiniProduct: React.FC<Product> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col md:flex-row border rounded-lg shadow-sm hover:shadow-md transition-all duration-300 bg-white w-full max-w-3xl p-4 gap-4"
+      className="flex w-full flex-col md:flex-row border rounded-lg shadow-sm
+       hover:shadow-md transition-all duration-300 bg-white  p-4 gap-4"
     >
       {/* Product Image Section */}
       <div className="relative w-full md:w-48 h-48 flex-shrink-0 group">

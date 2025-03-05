@@ -24,6 +24,53 @@ body {
   width: 8px;
   height: 0;
 }
+abbr {
+  text-decoration: none;
+}
+abbr::after {
+  content: attr(title); /* Get the title attribute */
+  position: absolute;
+  left: -70px;
+  max-width: 20 0px;
+  text-wrap: normal;
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.abb2::after {
+  content: attr(title); 
+  position: absolute;
+  left: 100px;
+  top: 65px;
+  max-width: 20 0px;
+  text-wrap: normal;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* Show tooltip on hover */
+abbr:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-45px);
+}
+
+
 
 *::-webkit-scrollbar-track {
   background: #ffffff00;

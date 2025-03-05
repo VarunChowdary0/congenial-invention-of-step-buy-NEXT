@@ -3,70 +3,55 @@
 import React, { useEffect, useState } from 'react'
 import { Product } from '@/types/item'
 import MiniProduct from '@/components/widgets/MiniProduct';
-import Filters from '@/components/widgets/Filters';
 import axios from 'axios';
 import { server_url } from '@/components/Constant';
+import { useSearchParams } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
 const ExplorePage = () => {
-    const [products,setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [priceRange, setPriceRange] = useState<number>(10000);
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const filterProducts = () => {
-    let filtered = [...products];
-    
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
-        product.features.some(f => f.attribute === 'category' && f.value === selectedCategory)
-      );
-    }
-    
-    filtered = filtered.filter(product => product.price <= priceRange);
-    
-    if (searchQuery) {
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    return filtered;
-  };
+  const parms = useSearchParams();
+  const [query,setQuery] = React.useState<string>(parms.get('key') || '');
+
+
+  const [products,setProducts] = useState<Product[]>([]);
+
+  const dispatch = useDispatch();
+  
+  useEffect(()=>{
+    setQuery(parms.get('key') || '');
+  },[parms])
 
   useEffect(()=>{
-    axios.get(server_url+"/api/Product/all")
+    dispatch({type:"LOADING"});
+    axios.get(server_url+"/api/Product/deepsearch?query="+query)
     .then((response) => {
         console.log(response.data);
         setProducts(response.data);
     })
     .catch((error) => {
         console.log(error);
-    });
-  },[])
+    })
+    .finally(()=>{
+        dispatch({type:"LOADED"});
+    })
+  },[query])
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className=" h-fit min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4 ">
+        <div className=' w-[60vw] h-fit bg-yellow-400 gap-2'>
+          {
+              products.map((products) => 
+                  <MiniProduct {...products} key={products.id}/>
+              ) 
+          }
 
-          <Filters 
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}/>
-
-      {/* Product Grid */}
-    <div className='flex w-full gap-8'>
-      <div className='h-screen w-[280px] bg-slate-900'></div>
-        <div className=' flex-1 w-full flex flex-col gap-0'>
-            {
-                filterProducts().map((products) => 
-                    <MiniProduct {...products} key={products.id}/>
-                ) 
-            }
         </div>
-    </div>
+          {products.length === 0 && 
+            <div className=' w-full h-[78vh] flex items-center justify-center'>
+              <h1 className=' text-4xl font-semibold text-gray-500'>⚠️ No Products Found</h1>
+            </div>
+          }  
     </div>
   )
 }

@@ -7,9 +7,9 @@ import { useSession } from 'next-auth/react';
 import DropDownUser from './DropDownUser';
 import Link from 'next/link';
 import { MdAdminPanelSettings as AdminIcon } from 'react-icons/md';
-import {  useRouter } from 'next/navigation';
+import {  useRouter, useSearchParams } from 'next/navigation';
 import ContainerLoader from './ContainerLoader';
-import { CommandIcon, Pencil, Search, ShoppingCartIcon, User, X } from 'lucide-react';
+import { CommandIcon, Pencil, Search, SettingsIcon, ShoppingCartIcon, User, X } from 'lucide-react';
 import Logo from '../icons/Logo';
 import PopUp from '../popups/PopUp';
 import { SearchResult } from '@/types/search'
@@ -19,6 +19,9 @@ import { common_operation,formatPrice,operations, operations_admin, server_url }
 import { UserType } from '@/types/personal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Cart, CartItem } from '@/types/logistics';
+import SearchWidget from './SearchWidget';
+import { SearchTypes, Settings } from '@/types/settings';
+import { set } from 'lodash';
 
 
 
@@ -26,16 +29,32 @@ const NavBar = () => {
 
   const {data: session, status} = useSession();
   const router = useRouter();
+
+
+  const settings:Settings =  localStorage.getItem("Settings_2eudj20jdjd2j0q") ?
+  JSON.parse(localStorage.getItem("Settings_2eudj20jdjd2j0q") as string) :
+  {
+    HeadSearchMode : SearchTypes.FullSearch
+  };
+
+  const [suggestions,setSuggestions] = useState<string[]>([]);
+
+  const params = useSearchParams();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // console.log(session,status);
   const [showSearch,setShowSearch] = useState<boolean>(false);
-  const searchInput = useRef<HTMLInputElement | null>(null);
+  const searchInput = useRef<HTMLInputElement>(null!);
+  const [qery,setQuery] = useState<string>(params.get("key")||'');
   const [searchResults, setSearchResults] = useState<SearchResult>({
     operations: session ? (session.user.role == UserType.Admin ? operations_admin: operations) : common_operation,
     products: []
   });
   const cartItems = useSelector((state: { cart : Cart }) => state.cart.CartItems.length);
   const [isLoading, setIsLoading] = useState(false);
+
+
+  const [showFullBax,setFullBox] =useState<boolean>(false);
 
     const dispatch = useDispatch();
     useEffect(()=>{
@@ -52,6 +71,16 @@ const NavBar = () => {
       })
     },[status])
 
+  const suggestionsSearch = debounce(async (query: string) => {
+    axios.get(`http://localhost:5000/search?query=${query}`)
+    .then((res)=>{
+      setSuggestions(res.data);
+    })
+    .catch((err)=>{
+      console.log(err);
+    });
+  },500)
+    
   const performSearch = debounce(async (query: string) => {
     if (!query.trim()) {
       setSearchResults({ operations: [], products: [] })
@@ -78,7 +107,23 @@ const NavBar = () => {
     .finally(()=>{ 
       setIsLoading(false);
     });
-  }, 300);
+  },400);
+
+  const save_search = (prodId:string) => {
+    if(session?.user.id){
+axios.get(`${server_url}/api/Product/save_search?userId=${session.user.id}&viewedItem=${prodId}&searchTerm=${qery}`)
+      .then((res)=>{
+        console.log(res.data);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
+  }
+
+    useEffect(()=>{
+      setQuery(params.get('key') || '');
+    },[params])
 
   useEffect(()=>{
     // console.log(searchResults);
@@ -99,7 +144,10 @@ const NavBar = () => {
     });
   },[status,session])
 
+
   useEffect(() => {
+    performSearch(qery);
+    suggestionsSearch(qery);
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'k' && event.ctrlKey) {
         event.preventDefault();
@@ -108,6 +156,9 @@ const NavBar = () => {
       }
       if (event.key === 'Control') {
         setIsDropdownOpen(false);
+      }
+      if(event.key === 'Escape'){
+        setFullBox(false);
       }
     };
     document.addEventListener('keydown', handleEscapeKey);
@@ -185,7 +236,7 @@ const NavBar = () => {
             <div
                 onClick={()=>setShowSearch(false)} 
             className=' absolute right-3 flex gap-3'>
-            <Link 
+            <Link onClick={()=>save_search(product.id)}
             className=' text-sky-600 hover:text-sky-200 text-sm transition-all inline-flex items-center gap-1'
               href={`/product/${product.id}`}>view</Link>
               <Link className=' text-indigo-600 hover:text-indigo-200 text-sm transition-all inline-flex items-center gap-1'
@@ -199,7 +250,10 @@ const NavBar = () => {
              :
              searchResults.products.map(product => (
               <Link href={`/product/${product.id}`}
-              onClick={()=>setShowSearch(false)} 
+              onClick={()=>{
+                save_search(product.id);
+                  setShowSearch(false)
+                }} 
                 key={product.id}
                 className="flex items-center gap-3 p-3 hover:bg-[#2a2929] 
                   cursor-pointer rounded-sm group"
@@ -260,8 +314,12 @@ const NavBar = () => {
             <div className=' relative pr-1 rounded-lg shadow-lg max-sm:w-[80vw] bg-[#191919] w-[510px] overflow-hidden max-h-[347px]'>
               <div className=' absolute right-0 left-0 bg-[#191919] overflow-hidden  flex text-[#a1a1a9] top-0 w-full p-3'>
                       <Search className=' w-5 '/>
-                      <input ref={searchInput} className='ml-2 font-sans tracking-[0.2px] w-[85%] text-[14px] outline-none bg-transparent' 
-                           onChange={(e) => performSearch(e.target.value)}
+                      <input ref={searchInput} value={qery} 
+                      className='ml-2 font-sans tracking-[0.2px] w-[85%] text-[14px] outline-none bg-transparent' 
+                           onChange={(e) => {
+                            setQuery(e.target.value);
+                            performSearch(e.target.value);
+                          }}
                          placeholder='Type a command or search..' type="text" />
                       <button  
                         onClick={()=>setShowSearch(false)}
@@ -270,6 +328,26 @@ const NavBar = () => {
                       </button>
               </div>
               <hr className='border-[0.5px] mt-[50px] mb-1 border-[#2e2e2e] '/>
+              <button onClick={()=>{
+                localStorage.setItem("Settings_2eudj20jdjd2j0q",
+                  JSON.stringify(
+                    {
+                      ...settings,
+                      HeadSearchMode:settings.HeadSearchMode === SearchTypes.FullSearch 
+                      ? SearchTypes.Univeral : SearchTypes.FullSearch
+                    }
+                  )
+                );
+                setShowSearch(false);
+              }} className=' group text-sm rounded-full hover:text-white 
+              hover:bg-[#78b222] transition-all duration-300
+               absolute font-medium bottom-4 right-6 p-2 px-4 
+               bg-slate-50 hover:scale-110 active:scale-75'>
+                <abbr className=' flex items-center justify-center gap-2' title="view products on fullscreen">
+                <SettingsIcon/>
+                  Products
+                </abbr>
+              </button>
               <div className=' w-full overflow-y-auto h-[300px] '>
                 <div className=' w-full h-fit flex gap-4 px-3 py-4 flex-col'>
                   <SearchCard/>
@@ -294,6 +372,61 @@ const NavBar = () => {
             </div>
           </div>
 
+         { settings.HeadSearchMode === SearchTypes.FullSearch ?
+
+          <SearchWidget 
+              setFullBox={setFullBox}
+              query={qery}
+              setQuery={setQuery}
+              handleSearch={suggestionsSearch}
+              childrenHead={
+                (
+                  <div className=' max-sm:hidden flex-1 h-full flex items-center justify-end mr-3
+              '>
+                  <div onClick={()=>setShowSearch(true)} className=' w-full ring-0 h-9 border-[1.4px] rounded-lg 
+                    font-medium text-black
+                  bg-[#ffffff] hover:bg-[#2a2929]
+                  hover:cursor-pointer hover:ring-4 
+                    hover:ring-[#6571e0] duration-300
+                  outline-none max-w-[250px]  hover:text-white flex items-center
+                    justify-between px-2 transition-all'>
+                      <div className='text-[#e2e2e2] flex hover:cursor-pointer bg-[#2a2929] gap-[2px]
+                      text-xs items-center justify-center  px-2 py-[4px] rounded'>
+                        <CommandIcon className='h-3 w-3 '/>
+                        <span className=' font-light'>K</span>
+                      </div>
+                  </div>  
+              </div>
+                )
+              }
+
+              childrenSub={
+                (suggestions.length > 0) && (showFullBax) && (
+
+                  <div className='  absolute top-[50px] max-h-[70vh] h-fit w-full ring-4 
+                  rounded bg-[#000000c3] shadow-xl border-2 ring-[#6571e0] outline-lime-50 backdrop-blur-xl'>
+                  {
+                      suggestions.map(suggestion => (
+                        <Link href={`/search?key=${suggestion}`}
+                            onClick={()=>{
+                                setFullBox(false);
+                              }} 
+                              key={suggestion}
+                              className="flex items-center gap-3 p-2 px-5 hover:bg-[#2a2929] 
+                                cursor-pointer rounded-sm group"
+                            >
+                          <div>
+                              <p className="text-md text-white">• {suggestion}</p>
+                          </div>
+                        </Link>
+                      ))
+                  }
+                  </div>
+                )
+              }
+          
+          />
+         :
           <div className=' max-sm:hidden flex-1 h-full flex items-center justify-end mr-3
           '>
               <div onClick={()=>setShowSearch(true)} className=' w-full ring-0 h-9 border-[1.4px] rounded-lg 
@@ -313,7 +446,10 @@ const NavBar = () => {
                     <span className=' font-light'>K</span>
                   </div>
               </div>  
-          </div>      
+          </div>
+        }  
+
+
           <div className=' hidden flex-1 h-full max-sm:flex items-center justify-end
           '>
               <div onClick={()=>setShowSearch(true)} className=' ring-0 h-9 border-[1.4px] rounded-lg 
