@@ -37,6 +37,7 @@ const NavBar = () => {
     HeadSearchMode : SearchTypes.FullSearch
   };
 
+  
   const [suggestions,setSuggestions] = useState<string[]>([]);
 
   const params = useSearchParams();
