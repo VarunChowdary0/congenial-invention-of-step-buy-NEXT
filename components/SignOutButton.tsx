@@ -6,13 +6,6 @@ import { useRouter } from "next/navigation";
 export default function SignOutButton() {
   const { status } = useSession();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/auth"); // Redirect only when the session is fully unauthenticated
-  //   }
-  // }, [status, router]);
-
   if (status !== "authenticated") {
     return (
       <button

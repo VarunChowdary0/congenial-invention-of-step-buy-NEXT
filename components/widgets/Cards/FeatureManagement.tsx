@@ -4,6 +4,7 @@ import EditFeature from '@/components/mini/EditFeature'
 import axios from 'axios'
 import { server_url } from '@/components/Constant'
 import ContainerLoader from '@/components/mini/ContainerLoader'
+import { is } from 'drizzle-orm'
 
 interface Feature {
     id: string
@@ -65,10 +66,7 @@ const FeatureManagement: React.FC<FeatureData> = ({ features ,pid }) => {
             return updatedFeatures;
         });
     }
-    
-    if(loading){
-        return <ContainerLoader/>
-    }
+
 
 
     return (
@@ -77,6 +75,8 @@ const FeatureManagement: React.FC<FeatureData> = ({ features ,pid }) => {
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-gray-800">Product Features</h2>
             </div>
+            
+
             {Allfeatures.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-lg">
                     <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -100,8 +100,20 @@ const FeatureManagement: React.FC<FeatureData> = ({ features ,pid }) => {
                 </div>
             )}
 
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">Product Features</h2>
+            {features.length > 0 && (
+                <div className="mt-4 p-4 bg-blue-50 rounded-md">
+                    <p className="text-sm text-blue-600">
+                        Total Features: {features.length}
+                    </p>
+                </div>
+            )}
+
+            {
+                loading && <ContainerLoader/>
+            }
+
+            <div className="flex items-center w-full justify-end mb-4">
+                {/* <h2 className="text-lg font-semibold text-gray-800">Product Features</h2> */}
                 <button
                     onClick={addNewFeature}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 
@@ -111,14 +123,6 @@ const FeatureManagement: React.FC<FeatureData> = ({ features ,pid }) => {
                     Add Feature
                 </button>
             </div>
-
-            {features.length > 0 && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-md">
-                    <p className="text-sm text-blue-600">
-                        Total Features: {features.length}
-                    </p>
-                </div>
-            )}
         </div>
     )
 }

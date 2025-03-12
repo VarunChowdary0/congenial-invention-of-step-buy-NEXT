@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Cart, CartItem } from '@/types/logistics';
 import SearchWidget from './SearchWidget';
 import { SearchTypes, Settings } from '@/types/settings';
-import { set } from 'lodash';
 
 
 
